@@ -1,6 +1,6 @@
 package warenautomat;
 
-public class Muenzeule {
+public class Muenzseule {
 
 	private int mKapazitaet;
 	private double mMuenzart;
@@ -12,17 +12,21 @@ public class Muenzeule {
 	 * @param pMuenzart
 	 * @param pAnzahlMuenzen
 	 */
-	public Muenzeule(int pKapazitaet , double pMuenzart, int pAnzahlMuenzen) {
+	public Muenzseule(int pKapazitaet , double pMuenzart, int pAnzahlMuenzen) {
 		mKapazitaet = pKapazitaet;
 		mMuenzart = pMuenzart;
 		mAnzahlMuenzen = pAnzahlMuenzen;
+	}
+	
+	public int gibAnzahlMuenzen() {
+		return mAnzahlMuenzen;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public double getMuenzart() {
+	public double gibMuenzart() {
 		return mMuenzart;
 	}
 
@@ -34,6 +38,19 @@ public class Muenzeule {
 	public boolean fuegeMunzenHinzu(int pAnzahl) {
 		if (mAnzahlMuenzen < 100) {
 			mAnzahlMuenzen++;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 *
+	 * @param pAnzahl
+	 * @return
+	 */
+	public boolean entferneMuenzen(int pAnzahl) {
+		if (mAnzahlMuenzen > 0) {
+			mAnzahlMuenzen--;
 			return true;
 		}
 		return false;

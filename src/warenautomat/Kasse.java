@@ -14,10 +14,14 @@ import warenautomat.SystemSoftware;
  */
 public class Kasse {
 	
-  private Muenzeule[] mMuenzeule;
+  private Muenzseule[] mMuenzseule;
   
   final static int CAPACITY_MUENZEULE = 100;
+  final static boolean DRY_RUN = true;
+
+  // immer von klein zu gross!
   final static double VALUE_MUENZEN[] =  { 0.10, 0.20, 0.50, 1.00, 2.00 };
+
   private double mEinwurfBetrag;
 
   /**
@@ -26,9 +30,9 @@ public class Kasse {
    */
   public Kasse() {
 	int totMuenezen = VALUE_MUENZEN.length;
-	mMuenzeule = new Muenzeule[totMuenezen];
+	mMuenzseule = new Muenzseule[totMuenezen];
 	for (int i = 0; i < totMuenezen; i++) {
-		mMuenzeule[i] = new Muenzeule(CAPACITY_MUENZEULE, VALUE_MUENZEN[i], 0);
+		mMuenzseule[i] = new Muenzseule(CAPACITY_MUENZEULE, VALUE_MUENZEN[i], 0);
 	}
 	mEinwurfBetrag = 0.0;
   }
@@ -90,10 +94,9 @@ public class Kasse {
    *         <code> false </code>, wenn Münzsäule bereits voll war.
    */
   public boolean einnehmen(double pMuenzenBetrag) {
-	int totMuenezen = VALUE_MUENZEN.length;
-	for (int i = 0; i < totMuenezen; i++) {
-		if (getIntValueMuenze(mMuenzeule[i].getMuenzart()) == getIntValueMuenze(pMuenzenBetrag)) {
-			return checkAndFillAndShow(mMuenzeule[i], 1);
+	for (int i = 0; i < mMuenzseule.length; i++) {
+		if (getIntValueMuenze(mMuenzseule[i].gibMuenzart()) == getIntValueMuenze(pMuenzenBetrag)) {
+			return checkAndFillAndShow(mMuenzseule[i], 1);
 		}
 	}
     return false;
@@ -101,13 +104,13 @@ public class Kasse {
   
   /**
    * 
-   * @param mMuenzeule
+   * @param mMuenzseule
    * @param pAmount
    * @return
    */
-   private boolean checkAndFillAndShow(Muenzeule pMuenzeule, int pAmount) {
-	   if (pMuenzeule.fuegeMunzenHinzu(pAmount)) {
-		   aktualisiereBetrag(pMuenzeule, pAmount);
+   private boolean checkAndFillAndShow(Muenzseule pMuenzseule, int pAmount) {
+	   if (pMuenzseule.fuegeMunzenHinzu(pAmount)) {
+		   aktualisiereBetrag(pMuenzseule, pAmount);
 		   return true;
 	   }
 	   return false;
@@ -115,10 +118,10 @@ public class Kasse {
    
    /**
     *
-    * @param pMuenzeule
+    * @param pMuenzseule
     */
-   private void aktualisiereBetrag(Muenzeule pMuenzeule, int pAmount) {
-	   int eingefuegtesGeld = getIntValueMuenze(pMuenzeule.getMuenzart()) * pAmount;
+   private void aktualisiereBetrag(Muenzseule pMuenzseule, int pAmount) {
+	   int eingefuegtesGeld = getIntValueMuenze(pMuenzseule.gibMuenzart()) * pAmount;
 	   mEinwurfBetrag = getDoubleValueMuenze(getIntValueMuenze(mEinwurfBetrag) + eingefuegtesGeld);
 	   SystemSoftware.zeigeBetragAn(mEinwurfBetrag);
    }
@@ -128,8 +131,16 @@ public class Kasse {
    * @param muenze
    * @return
    */
-  private int getIntValueMuenze(double muenze) {
+   public int getIntValueMuenze(double muenze) {
 	  return (int) Math.round(muenze * 100);
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  public double getEinwurfBetrag() {
+	  return mEinwurfBetrag;
   }
   
   /**
@@ -137,7 +148,7 @@ public class Kasse {
    * @param muenze
    * @return
    */
-  private double getDoubleValueMuenze(int muenze) {
+  public double getDoubleValueMuenze(int muenze) {
 	  return muenze / 100.0;
   }
 
@@ -160,6 +171,57 @@ public class Kasse {
     
     return 0.0; // TODO
     
+  }
+  
+  /**
+   * 
+   * @param betrag
+   * @param pDryRun
+   * @return
+   */
+  private double entferneGeldMuenzseule(double betrag, boolean pDryRun) {
+	int preisInt = getIntValueMuenze(betrag);
+	int pEinwurfBetrag = getIntValueMuenze(mEinwurfBetrag);
+	if (pEinwurfBetrag == 0) {
+	    return 0;
+	}
+    for (int i = mMuenzseule.length - 1; i >= 0; i--) {
+    	int gesamtWertSeule = gibWertMuenzeuleinInt(mMuenzseule[i]);
+    	if (gesamtWertSeule > 0 && (preisInt / gesamtWertSeule) >= 1) {
+    		preisInt = preisInt - gesamtWertSeule;
+    	}
+    	if (preisInt == 0) {
+    		break;
+    	}
+	}
+    int originalBetrag = getIntValueMuenze(betrag);
+    if (preisInt == originalBetrag) {
+    	return betrag;
+    }
+	return getDoubleValueMuenze(pEinwurfBetrag - getIntValueMuenze(betrag) + preisInt);
+  }
+  
+  /**
+   *
+   * @param pMuenzseule
+   * @return
+   */
+  private int gibWertMuenzeuleinInt(Muenzseule pMuenzseule) { 
+	  return getIntValueMuenze(pMuenzseule.gibMuenzart()) * pMuenzseule.gibAnzahlMuenzen();
+  }
+
+  /**
+   *
+   * @param betrag
+   * @return
+   */
+  public boolean istAusreichendWechselgeldVorhanden(double betrag) {
+	double restGeldNachBezahlung = entferneGeldMuenzseule(betrag, DRY_RUN);
+	if (getIntValueMuenze(restGeldNachBezahlung) == 0) {
+		return true;
+	}
+	double restGeldNachWechselgeld = entferneGeldMuenzseule(restGeldNachBezahlung, DRY_RUN);
+	return !(getIntValueMuenze(restGeldNachWechselgeld) == getIntValueMuenze(restGeldNachBezahlung));
   }
 
 }

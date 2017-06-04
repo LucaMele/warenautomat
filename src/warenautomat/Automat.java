@@ -98,7 +98,7 @@ public class Automat {
 	  if (ware != null) {
 		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, ware.getWarenname(), ware.getAblaufsdatum());
 		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, ware.getPreis());
-		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, new Date().before(ware.getAblaufsdatum()) ? 1 : 2);
+		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, SystemSoftware.gibAktuellesDatum().before(ware.getAblaufsdatum()) ? 1 : 2);
 	  } else {
 		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, 0);
 	  }
@@ -138,9 +138,71 @@ public class Automat {
    * @return Wenn alles o.k. <code> true </code>, sonst <code> false </code>.
    */
   public boolean oeffnen(int pDrehtellerNr) {
+    if (istFachLeer(pDrehtellerNr -1)) {
+    	System.out.print("\n istFachLeer \n");
+    	return false;
+    }
+    if (istVerfallsdatumErreicht(pDrehtellerNr -1)) {
+    	System.out.print("\n istVerfallsdatumErreicht \n");
+    	return false;
+    }
+    if (!istGenugGeldEingeworfen(pDrehtellerNr -1)) {
+    	SystemSoftware.zeigeZuWenigGeldAn();
+    	System.out.print("\n istGenugGeldEingeworfen \n");
+    	return false;
+    }
+    if (!istGenugWechselgeldVorhanden(pDrehtellerNr -1)) {
+    	SystemSoftware.zeigeZuWenigWechselGeldAn();
+    	System.out.print("\n istGenugWechselgeldVorhanden \n");
+    	return false;
+    }
+    SystemSoftware.entriegeln(pDrehtellerNr);
+    return true;  // TODO
     
-    return false;  // TODO
-    
+  }
+  
+  /**
+   *
+   * @param pDrehtellerNr
+   * @return
+   */
+  private boolean istFachLeer(int pDrehtellerNr) {
+	  if (getWareMitPositionen(pDrehtellerNr, mDrehtellerPosition) == null) {
+		  return true;
+	  }
+	  return false;
+  }
+  
+  /**
+   *
+   * @param pDrehtellerNr
+   * @return
+   */
+  private boolean istVerfallsdatumErreicht(int pDrehtellerNr) {
+	  if (SystemSoftware.gibAktuellesDatum().before(getWareMitPositionen(pDrehtellerNr, mDrehtellerPosition).getAblaufsdatum())) {
+		  return false;
+	  }
+	  return true;
+  }
+  
+  /**
+  *
+  * @param pDrehtellerNr
+  * @return
+  */
+  private boolean istGenugGeldEingeworfen(int pDrehtellerNr) {
+	  int wertEingewurfeneBetrag = mKasse.getIntValueMuenze(mKasse.getEinwurfBetrag());
+	  int wertWare = mKasse.getIntValueMuenze(getWareMitPositionen(pDrehtellerNr, mDrehtellerPosition).getPreis());
+	  return wertEingewurfeneBetrag >= wertWare;
+  }
+  
+  /**
+   *
+   * @param pDrehtellerNr
+   * @return
+   */
+  private boolean istGenugWechselgeldVorhanden(int pDrehtellerNr) {
+	  return mKasse.istAusreichendWechselgeldVorhanden(getWareMitPositionen(pDrehtellerNr, mDrehtellerPosition).getPreis());
   }
 
   /**
