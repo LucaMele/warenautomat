@@ -32,6 +32,7 @@ public class GuiTest {
     SystemSoftware.erzeugeGUI(automat);
     
     automat.fuelleFach(3, "Mars", 2.00, df.parse("01.01.2009"));
+    automat.fuelleFach(7, "Mars", 2.30, df.parse("01.01.2109"));
     
     for(int i = 0; i < 16; i++) {
     	

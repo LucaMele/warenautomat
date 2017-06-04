@@ -156,6 +156,9 @@ public class Automat {
     	System.out.print("\n istGenugWechselgeldVorhanden \n");
     	return false;
     }
+    
+    mKasse.entferneGeldMuenzseule(getWareMitPositionen(pDrehtellerNr-1, mDrehtellerPosition).getPreis(), !Kasse.DRY_RUN, Kasse.OEFFNEN_MODUS);
+    
     SystemSoftware.entriegeln(pDrehtellerNr);
     return true;  // TODO
     

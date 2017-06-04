@@ -18,6 +18,8 @@ public class Kasse {
   
   final static int CAPACITY_MUENZEULE = 100;
   final static boolean DRY_RUN = true;
+  final static int OEFFNEN_MODUS = 1;
+  final static int RESTGELD_MODUS = 2;
 
   // immer von klein zu gross!
   final static double VALUE_MUENZEN[] =  { 0.10, 0.20, 0.50, 1.00, 2.00 };
@@ -179,26 +181,47 @@ public class Kasse {
    * @param pDryRun
    * @return
    */
-  private double entferneGeldMuenzseule(double betrag, boolean pDryRun) {
+  public boolean entferneGeldMuenzseule (double betrag, boolean pDryRun, int modus) {
 	int preisInt = getIntValueMuenze(betrag);
-	int pEinwurfBetrag = getIntValueMuenze(mEinwurfBetrag);
-	if (pEinwurfBetrag == 0) {
-	    return 0;
+	int restGeldNachBezahlung = getIntValueMuenze(mEinwurfBetrag) - preisInt;
+	if (!pDryRun) {
+		mEinwurfBetrag = getDoubleValueMuenze(restGeldNachBezahlung);
+		SystemSoftware.zeigeBetragAn(mEinwurfBetrag);
 	}
-    for (int i = mMuenzseule.length - 1; i >= 0; i--) {
-    	int gesamtWertSeule = gibWertMuenzeuleinInt(mMuenzseule[i]);
-    	if (gesamtWertSeule > 0 && (preisInt / gesamtWertSeule) >= 1) {
-    		preisInt = preisInt - gesamtWertSeule;
-    	}
-    	if (preisInt == 0) {
-    		break;
-    	}
-	}
-    int originalBetrag = getIntValueMuenze(betrag);
-    if (preisInt == originalBetrag) {
-    	return betrag;
-    }
-	return getDoubleValueMuenze(pEinwurfBetrag - getIntValueMuenze(betrag) + preisInt);
+	restGeldNachBezahlung = entferneMuenzenVonIntBetrag(restGeldNachBezahlung, modus);
+	return restGeldNachBezahlung == 0;
+  }
+  
+  /**
+   *
+   * @param preisInt
+   * @return
+   */
+  private int entferneMuenzenVonIntBetrag(int betragInt, int modus) {
+	  for (int i = mMuenzseule.length - 1; i >= 0; i--) {
+		  int maxMuenzeDiePlatzHaben = (int) (betragInt / getIntValueMuenze(mMuenzseule[i].gibMuenzart()));
+		  int anzahlMuenzen = mMuenzseule[i].gibAnzahlMuenzen();
+		  if (maxMuenzeDiePlatzHaben > anzahlMuenzen) {
+			  // TODO: symplify
+			  maxMuenzeDiePlatzHaben = anzahlMuenzen;
+		  }
+		  if (maxMuenzeDiePlatzHaben > 0 && maxMuenzeDiePlatzHaben > 0) {
+			  int tmpPreis = betragInt - (maxMuenzeDiePlatzHaben * getIntValueMuenze(mMuenzseule[i].gibMuenzart()));
+			  if (tmpPreis == 0) {
+				  betragInt = tmpPreis;
+				  if (modus == RESTGELD_MODUS) {
+					  mMuenzseule[i].entferneMuenzen(maxMuenzeDiePlatzHaben);
+				  }
+				  break;
+			  } else if (tmpPreis > 0) {
+				  betragInt = tmpPreis;
+				  if (modus == RESTGELD_MODUS) {
+					  mMuenzseule[i].entferneMuenzen(maxMuenzeDiePlatzHaben);
+				  }
+			  }
+		  }
+		}
+	    return betragInt;
   }
   
   /**
@@ -216,12 +239,8 @@ public class Kasse {
    * @return
    */
   public boolean istAusreichendWechselgeldVorhanden(double betrag) {
-	double restGeldNachBezahlung = entferneGeldMuenzseule(betrag, DRY_RUN);
-	if (getIntValueMuenze(restGeldNachBezahlung) == 0) {
-		return true;
-	}
-	double restGeldNachWechselgeld = entferneGeldMuenzseule(restGeldNachBezahlung, DRY_RUN);
-	return !(getIntValueMuenze(restGeldNachWechselgeld) == getIntValueMuenze(restGeldNachBezahlung));
+		return entferneGeldMuenzseule(betrag, DRY_RUN, OEFFNEN_MODUS);
+
   }
 
 }

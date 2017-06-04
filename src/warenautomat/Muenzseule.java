@@ -36,8 +36,8 @@ public class Muenzseule {
 	 * @return
 	 */
 	public boolean fuegeMunzenHinzu(int pAnzahl) {
-		if (mAnzahlMuenzen < 100) {
-			mAnzahlMuenzen++;
+		if (mAnzahlMuenzen + pAnzahl <= 100) {
+			mAnzahlMuenzen = mAnzahlMuenzen + pAnzahl;
 			return true;
 		}
 		return false;
@@ -49,8 +49,8 @@ public class Muenzseule {
 	 * @return
 	 */
 	public boolean entferneMuenzen(int pAnzahl) {
-		if (mAnzahlMuenzen > 0) {
-			mAnzahlMuenzen--;
+		if (mAnzahlMuenzen - pAnzahl >= 0) {
+			mAnzahlMuenzen = mAnzahlMuenzen - pAnzahl;
 			return true;
 		}
 		return false;
