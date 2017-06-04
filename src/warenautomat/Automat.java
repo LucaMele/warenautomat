@@ -100,6 +100,8 @@ public class Automat {
 		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, ware.getPreis());
 		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, SystemSoftware.gibAktuellesDatum().before(ware.getAblaufsdatum()) ? 1 : 2);
 	  } else {
+		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, "", SystemSoftware.gibAktuellesDatum());
+		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, 0.0);
 		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, 0);
 	  }
   }
@@ -158,9 +160,12 @@ public class Automat {
     }
     
     mKasse.entferneGeldMuenzseule(getWareMitPositionen(pDrehtellerNr-1, mDrehtellerPosition).getPreis(), !Kasse.DRY_RUN, Kasse.OEFFNEN_MODUS);
+    mDrehteller[pDrehtellerNr-1].getFach(mDrehtellerPosition).setWare(null);
+    
+    aktualisiereDrehteller(pDrehtellerNr-1);
     
     SystemSoftware.entriegeln(pDrehtellerNr);
-    return true;  // TODO
+    return true;
     
   }
   
@@ -217,8 +222,16 @@ public class Automat {
    * @return Der totale Warenwert des Automaten.
    */
   public double gibTotalenWarenWert() {
-    
-    return 0.0; // TODO
+	int totWaren = 0;
+    for (int i = 0; i < mDrehteller.length; i++) {
+    	for (int j = 0; j < MAX_POSIZIONEN; j++) {
+    		Ware ware = getWareMitPositionen(i, j);
+    		if (ware != null) {
+    			totWaren += mKasse.getIntValueMuenze(ware.getPreis());
+    		}
+    	}
+    }
+    return mKasse.getDoubleValueMuenze(totWaren);
     
   }
 

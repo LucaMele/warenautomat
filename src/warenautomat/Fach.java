@@ -27,4 +27,12 @@ public class Fach {
 	public Ware getWare() {
 		return mWare;
 	}
+	
+	/**
+	 * 
+	 * @param pWare
+	 */
+	public void setWare(Ware pWare) {
+		mWare = pWare;
+	}
 }
