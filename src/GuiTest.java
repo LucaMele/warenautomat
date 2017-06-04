@@ -15,6 +15,7 @@ $Revision    : 1.10 $  $Date: 2017/05/31 11:20:15 $
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import warenautomat.*;
@@ -30,20 +31,25 @@ public class GuiTest {
     
     SystemSoftware.erzeugeGUI(automat);
     
-    automat.fuelleFach(1, "Mars", 2.00, df.parse("01.01.2009"));
+    automat.fuelleFach(3, "Mars", 2.00, df.parse("01.01.2009"));
     
     for(int i = 0; i < 16; i++) {
       String day = String.format("%02d", i+1);
       automat.fuelleFach(1, "Mars"+(i+1), i+1, df.parse(day+".01.2100"));
-      automat.drehen();
+	  automat.fuelleFach(4, "Twix"+(i+1), Math.round(i+1 / 2.0), df.parse(day+".01.2100"));
+	  automat.drehen();
     }
     
-    
     for(int i = 0; i < 16; i++) {
-        String day = String.format("%02d", i+1);
-        automat.fuelleFach(4, "Twix"+(i+1), i+1, df.parse(day+".01.2100"));
-        automat.drehen();
-      }
+    	if (i == 3 || i == 6) {
+    		String day = String.format("%02d", (i+1));
+        	automat.fuelleFach(4, "Kinder"+(i+1), Math.round((i+1) / 2.0), df.parse(day+".01.1988"));
+    	}
+    	
+  	  	automat.drehen();
+    }
+   
+      
     
   }
 

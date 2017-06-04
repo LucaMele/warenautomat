@@ -27,7 +27,7 @@ public class Automat {
 	  for (int i = 0; i < NR_DREHTELLER; i++) {
 		  mDrehteller[i] = new Drehteller(MAX_POSIZIONEN);
 	  }
-	  mDrehtellerPosition = 1;
+	  mDrehtellerPosition = 0;
 	  mKasse = new Kasse();
   }
 
@@ -49,7 +49,8 @@ public class Automat {
    */
   public void fuelleFach(int pDrehtellerNr, String pWarenName, double pPreis, Date pVerfallsDatum) {
 	 if (pDrehtellerNr <= 7) {
-		 mDrehteller[pDrehtellerNr- 1].fuelleFachAuf(mDrehtellerPosition - 1, pWarenName, pPreis, pVerfallsDatum);
+		 mDrehteller[pDrehtellerNr- 1].fuelleFachAuf(mDrehtellerPosition, pWarenName, pPreis, pVerfallsDatum);
+		 aktualisiereDrehteller(pDrehtellerNr);
 	 }
   }
 
@@ -72,11 +73,11 @@ public class Automat {
    */
   public void drehen() {
 	  SystemSoftware.dreheWarenInGui();
+	  System.out.print("\n\nDrehteller position " + mDrehtellerPosition + "\n");
+	  mDrehtellerPosition++;
 	  if (mDrehtellerPosition >= 16) {
 		  mDrehtellerPosition = 0;
 	  }
-	  mDrehtellerPosition++;
-	  System.out.print("\n\nDrehteller position " + mDrehtellerPosition + "\n");
 	  aktualieserePreise();
   }
   
@@ -85,13 +86,25 @@ public class Automat {
    */
   private void aktualieserePreise() {
 	  for (int i = 0; i < NR_DREHTELLER; i++) {
-		  Ware ware = getWareMitPositionen(i, mDrehtellerPosition);
-		  if (ware != null) {
-			  SystemSoftware.zeigeWareInGui(i + 1, ware.getWarenname(), ware.getAblaufsdatum());
-		  }
-		  
+		  aktualisiereDrehteller(i);
 	  }
 	  
+  }
+  
+  /**
+   * 
+   * @param drehtellerNr
+   */
+  private void aktualisiereDrehteller(int drehtellerNr) {
+	  Ware ware = getWareMitPositionen(drehtellerNr, mDrehtellerPosition);
+	  int physicherDrehteller = drehtellerNr + 1;
+	  if (ware != null) {
+		  SystemSoftware.zeigeWareInGui(physicherDrehteller, ware.getWarenname(), ware.getAblaufsdatum());
+		  SystemSoftware.zeigeWarenPreisAn(physicherDrehteller, ware.getPreis());
+		  SystemSoftware.zeigeVerfallsDatum(physicherDrehteller, new Date().before(ware.getAblaufsdatum()) ? 1 : 2);
+	  } else {
+		  SystemSoftware.zeigeVerfallsDatum(physicherDrehteller, 0);
+	  }
   }
   
   /**
@@ -101,7 +114,7 @@ public class Automat {
    * @return
    */
   private Ware getWareMitPositionen(int pDrehtellerNr, int pAktuellePosition) {
-	  return mDrehteller[pDrehtellerNr].getFach(pAktuellePosition - 1).getWare();
+	  return mDrehteller[pDrehtellerNr].getFach(pAktuellePosition).getWare();
   }
 
   /**

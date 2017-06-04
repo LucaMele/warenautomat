@@ -28,7 +28,7 @@ public class Drehteller {
 	 * @param pAblaufdatum
 	 */
 	public void fuelleFachAuf(int mFachNr, String pWarenname, double pPreis, Date pAblaufdatum) {
-		System.out.print("\nOeffne fach: "+ (mFachNr + 1) + "\n");
+		System.out.print("\nOeffne fach: "+ (mFachNr) + "\n");
 		mFach[mFachNr].fuelleFachAuf(pWarenname, pPreis, pAblaufdatum);
 	}
 	
