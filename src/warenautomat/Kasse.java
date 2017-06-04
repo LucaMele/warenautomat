@@ -158,9 +158,17 @@ public class Kasse {
    * Bewirkt den Auswurf des Restbetrages.
    */
   public void gibWechselGeld() {
-    
-    // TODO
-    
+	if (entferneMuenzenVonIntBetrag(getIntValueMuenze(mEinwurfBetrag), RESTGELD_MODUS) == 0) {
+		SystemSoftware.auswerfenWechselGeld(mEinwurfBetrag);
+		mEinwurfBetrag = 0.0;
+		SystemSoftware.zeigeBetragAn(mEinwurfBetrag);
+	} else {
+		throw new Error("System Fehler, sollte nie vorkommen dass ein fach offen ist dass kein wechselgeld hat!");
+	}
+	// TODO -> remove from prod
+	for (int i = mMuenzseule.length - 1; i >= 0; i--) {
+		System.out.print("\nREST in Kolonnen: " + mMuenzseule[i].gibAnzahlMuenzen() + " des tip: "+ mMuenzseule[i].gibMuenzart() + "\n");
+	}
   }
 
   /**
