@@ -13,15 +13,24 @@ import warenautomat.SystemSoftware;
  * - 2 Franken <br>
  */
 public class Kasse {
+	
+  private Muenzeule[] mMuenzeule;
+  
+  final static int CAPACITY_MUENZEULE = 100;
+  final static double VALUE_MUENZEN[] =  { 0.10, 0.20, 0.50, 1.00, 2.00 };
+  private double mEinwurfBetrag;
 
   /**
    * Standard-Konstruktor. <br>
    * Führt die nötigen Initialisierungen durch.
    */
   public Kasse() {
-    
-    // TODO
-    
+	int totMuenezen = VALUE_MUENZEN.length;
+	mMuenzeule = new Muenzeule[totMuenezen];
+	for (int i = 0; i < totMuenezen; i++) {
+		mMuenzeule[i] = new Muenzeule(CAPACITY_MUENZEULE, VALUE_MUENZEN[i], 0);
+	}
+	mEinwurfBetrag = 0.0;
   }
 
   /**
@@ -81,9 +90,55 @@ public class Kasse {
    *         <code> false </code>, wenn Münzsäule bereits voll war.
    */
   public boolean einnehmen(double pMuenzenBetrag) {
-    
-    return false; // TODO
-    
+	int totMuenezen = VALUE_MUENZEN.length;
+	for (int i = 0; i < totMuenezen; i++) {
+		if (getIntValueMuenze(mMuenzeule[i].getMuenzart()) == getIntValueMuenze(pMuenzenBetrag)) {
+			return checkAndFillAndShow(mMuenzeule[i], 1);
+		}
+	}
+    return false;
+  }
+  
+  /**
+   * 
+   * @param mMuenzeule
+   * @param pAmount
+   * @return
+   */
+   private boolean checkAndFillAndShow(Muenzeule pMuenzeule, int pAmount) {
+	   if (pMuenzeule.fuegeMunzenHinzu(pAmount)) {
+		   aktualisiereBetrag(pMuenzeule, pAmount);
+		   return true;
+	   }
+	   return false;
+   }
+   
+   /**
+    *
+    * @param pMuenzeule
+    */
+   private void aktualisiereBetrag(Muenzeule pMuenzeule, int pAmount) {
+	   int eingefuegtesGeld = getIntValueMuenze(pMuenzeule.getMuenzart()) * pAmount;
+	   mEinwurfBetrag = getDoubleValueMuenze(getIntValueMuenze(mEinwurfBetrag) + eingefuegtesGeld);
+	   SystemSoftware.zeigeBetragAn(mEinwurfBetrag);
+   }
+
+/**
+   *
+   * @param muenze
+   * @return
+   */
+  private int getIntValueMuenze(double muenze) {
+	  return (int) Math.round(muenze * 100);
+  }
+  
+  /**
+   * 
+   * @param muenze
+   * @return
+   */
+  private double getDoubleValueMuenze(int muenze) {
+	  return muenze / 100.0;
   }
 
   /**

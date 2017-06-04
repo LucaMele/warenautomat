@@ -18,7 +18,6 @@ public class Fach {
 	 */
 	public void fuelleFachAuf(String pWarenname, double pPreis, Date pAblaufdatum) {
 		mWare = new Ware(pWarenname, pPreis, pAblaufdatum);
-		System.out.print("\nNeue Ware erstellt: " + pWarenname + ", " + pPreis + " CHF, Ablaufdatum:" + pAblaufdatum + "\n");
 	}
 	
 	/**

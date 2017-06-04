@@ -34,19 +34,17 @@ public class GuiTest {
     automat.fuelleFach(3, "Mars", 2.00, df.parse("01.01.2009"));
     
     for(int i = 0; i < 16; i++) {
-      String day = String.format("%02d", i+1);
-      automat.fuelleFach(1, "Mars"+(i+1), i+1, df.parse(day+".01.2100"));
-	  automat.fuelleFach(4, "Twix"+(i+1), Math.round(i+1 / 2.0), df.parse(day+".01.2100"));
-	  automat.drehen();
-    }
-    
-    for(int i = 0; i < 16; i++) {
-    	if (i == 3 || i == 6) {
-    		String day = String.format("%02d", (i+1));
-        	automat.fuelleFach(4, "Kinder"+(i+1), Math.round((i+1) / 2.0), df.parse(day+".01.1988"));
-    	}
     	
-  	  	automat.drehen();
+	if (i == 3 || i == 6) {
+		String day = String.format("%02d", (i+1));
+		automat.fuelleFach(1, "Mars"+(i+1), i+1, df.parse(day+".01.2100"));
+    	automat.fuelleFach(4, "Kinder"+(i+1), Math.round((i+1) / 2.0), df.parse(day+".01.1988"));
+	} else {
+		String day = String.format("%02d", i+1);
+        automat.fuelleFach(1, "Mars"+(i+1), i+1, df.parse(day+".01.2100"));
+	    automat.fuelleFach(4, "Twix"+(i+1), Math.round(i+1 / 2.0), df.parse(day+".01.2100"));
+	}
+	  automat.drehen();
     }
    
       
