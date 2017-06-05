@@ -63,8 +63,29 @@ public class Kasse {
    *         Wenn ein nicht unterstützter Münzbetrag übergeben wurde: -200
    */
   public int verwalteMuenzbestand(double pMuenzenBetrag, int pAnzahl) {
-    
-    return 0; // TODO
+	boolean muenzeGefunden = false;
+	int totalMuenzeUnterschied = 0;
+    for (int i = 0; i < mMuenzseule.length; i++) {
+		if (getIntValueMuenze(mMuenzseule[i].gibMuenzart()) == getIntValueMuenze(pMuenzenBetrag)) {
+			mMuenzseule[i].istAmVerwalten(true);
+			int originalAnzahl = mMuenzseule[i].gibAnzahlMuenzen();
+			if (pAnzahl < 0) {
+				mMuenzseule[i].entferneMuenzen(Math.abs(pAnzahl));
+				totalMuenzeUnterschied = mMuenzseule[i].gibAnzahlMuenzen() - originalAnzahl;
+			} else {
+				mMuenzseule[i].fuegeMunzenHinzu(pAnzahl);
+				totalMuenzeUnterschied = mMuenzseule[i].gibAnzahlMuenzen() - originalAnzahl;
+			}
+			muenzeGefunden = true;
+			mMuenzseule[i].istAmVerwalten(false);
+			break;
+		}
+	}
+	if(!muenzeGefunden) {
+		return -200;
+	}
+	System.out.print("\ntotalMuenzeUnterschied" + totalMuenzeUnterschied);
+    return totalMuenzeUnterschied;
     
   }
 
@@ -76,9 +97,9 @@ public class Kasse {
    * <code>verwalteMuenzbestand()</code>.
    */
   public void verwalteMuenzbestandBestaetigung() {
-    
-    // TODO
-    
+	  for (int i = 0; i < mMuenzseule.length; i++) {
+		  mMuenzseule[i].speichereVerwalteteMuenzen();
+	  }
   }
  
   /**
@@ -248,15 +269,6 @@ public class Kasse {
 		  }
 		}
 	    return betragInt;
-  }
-  
-  /**
-   *
-   * @param pMuenzseule
-   * @return
-   */
-  private int gibWertMuenzeuleinInt(Muenzseule pMuenzseule) { 
-	  return getIntValueMuenze(pMuenzseule.gibMuenzart()) * pMuenzseule.gibAnzahlMuenzen();
   }
 
   /**
