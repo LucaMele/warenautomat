@@ -248,7 +248,6 @@ public class Kasse {
 		  int maxMuenzeDiePlatzHaben = (int) (betragInt / getIntValueMuenze(mMuenzseule[i].gibMuenzart()));
 		  int anzahlMuenzen = mMuenzseule[i].gibAnzahlMuenzen();
 		  if (maxMuenzeDiePlatzHaben > anzahlMuenzen) {
-			  // TODO: symplify
 			  maxMuenzeDiePlatzHaben = anzahlMuenzen;
 		  }
 		  if (maxMuenzeDiePlatzHaben > 0 && maxMuenzeDiePlatzHaben > 0) {
