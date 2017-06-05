@@ -32,7 +32,7 @@ public class Fach {
 	 * 
 	 * @param pWare
 	 */
-	public void setWare(Ware pWare) {
+	public void aktualiesiereWare(Ware pWare) {
 		mWare = pWare;
 	}
 }

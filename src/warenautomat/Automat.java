@@ -167,7 +167,7 @@ public class Automat {
     Ware ware = fach.getWare();
     ware.setVerkausdatum(SystemSoftware.gibAktuellesDatum());
     mKasse.getStatistik().erfasseWarenbezug(ware);
-    fach.setWare(null);
+    fach.aktualiesiereWare(null);
     
     aktualisiereDrehteller(pDrehtellerNr-1);
     
