@@ -84,7 +84,6 @@ public class Kasse {
 	if(!muenzeGefunden) {
 		return -200;
 	}
-	System.out.print("\ntotalMuenzeUnterschied" + totalMuenzeUnterschied);
     return totalMuenzeUnterschied;
     
   }
@@ -99,6 +98,7 @@ public class Kasse {
   public void verwalteMuenzbestandBestaetigung() {
 	  for (int i = 0; i < mMuenzseule.length; i++) {
 		  mMuenzseule[i].speichereVerwalteteMuenzen();
+		  SystemSoftware.zeigeMuenzenInGui(mMuenzseule[i].gibMuenzart(), mMuenzseule[i].gibAnzahlMuenzen());
 	  }
   }
  
@@ -211,7 +211,6 @@ public class Kasse {
 		ganzWert += getIntValueMuenze(ware.getPreis());
 	}
     return getDoubleValueMuenze(ganzWert);
-    
   }
   
   /**

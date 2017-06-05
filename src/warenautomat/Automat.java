@@ -1,5 +1,6 @@
 package warenautomat;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -94,6 +95,7 @@ public class Automat {
    * @param drehtellerNr
    */
   private void aktualisiereDrehteller(int drehtellerNr) {
+	  SystemSoftware.output(false);
 	  Ware ware = getWareMitPositionen(drehtellerNr, mDrehtellerPosition);
 	  if (ware != null) {
 		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, ware.getWarenname(), ware.getAblaufsdatum());
@@ -104,6 +106,7 @@ public class Automat {
 		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, 0.0);
 		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, 0);
 	  }
+	  SystemSoftware.output(true);
   }
   
   /**
@@ -161,7 +164,9 @@ public class Automat {
     
     mKasse.entferneGeldMuenzseule(getWareMitPositionen(pDrehtellerNr-1, mDrehtellerPosition).getPreis(), !Kasse.DRY_RUN, Kasse.OEFFNEN_MODUS);
     Fach fach = mDrehteller[pDrehtellerNr-1].getFach(mDrehtellerPosition);
-    mKasse.getStatistik().setWare(fach.getWare());
+    Ware ware = fach.getWare();
+    ware.setVerkausdatum(SystemSoftware.gibAktuellesDatum());
+    mKasse.getStatistik().setWare(ware);
     fach.setWare(null);
     
     aktualisiereDrehteller(pDrehtellerNr-1);
@@ -246,9 +251,14 @@ public class Automat {
    * @return Anzahl verkaufter Waren.
    */
   public int gibVerkaufsStatistik(String pName, Date pDatum) {
-    
-    return 0; // TODO
-    
+	ArrayList<Ware> warenStatistik = mKasse.getStatistik().gibStatistikHistorie();
+	int totWaren = 0;
+	for (Ware ware: warenStatistik) {
+	    if (ware.getWarenname().equals(pName) && ware.getVerkausdatum().after(pDatum)) {
+	    	totWaren++;
+	    }
+	}
+    return totWaren;
   }
   
 }

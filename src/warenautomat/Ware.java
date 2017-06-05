@@ -5,6 +5,7 @@ public class Ware {
 	private String mWarenname;
 	private double mPreis;
 	private Date mAblaufdatum;
+	private Date mVerkaufsdatum;
 	
 	/**
 	 * @constructor
@@ -15,6 +16,7 @@ public class Ware {
 		mWarenname = pWarenname;
 		mPreis = pPreis;
 		mAblaufdatum = pAblaufdatum;
+		mVerkaufsdatum = null;
 	}
 	
 	/**
@@ -31,6 +33,22 @@ public class Ware {
 	 */
 	public double getPreis() {
 		return mPreis;
+	}
+	
+	/**
+	 *
+	 * @param pVerkausdatum
+	 */
+	public void setVerkausdatum(Date pVerkausdatum) {
+		mVerkaufsdatum = pVerkausdatum;
+	}
+	
+	/**
+	 *
+	 * @param pVerkausdatum
+	 */
+	public Date getVerkausdatum() {
+		return mVerkaufsdatum;
 	}
 	
 	/**
