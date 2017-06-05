@@ -166,7 +166,7 @@ public class Automat {
     Fach fach = mDrehteller[pDrehtellerNr-1].getFach(mDrehtellerPosition);
     Ware ware = fach.getWare();
     ware.setVerkausdatum(SystemSoftware.gibAktuellesDatum());
-    mKasse.getStatistik().setWare(ware);
+    mKasse.getStatistik().erfasseWarenbezug(ware);
     fach.setWare(null);
     
     aktualisiereDrehteller(pDrehtellerNr-1);
@@ -206,9 +206,7 @@ public class Automat {
   * @return
   */
   private boolean istGenugGeldEingeworfen(int pDrehtellerNr) {
-	  int wertEingewurfeneBetrag = mKasse.getIntValueMuenze(mKasse.getEinwurfBetrag());
-	  int wertWare = mKasse.getIntValueMuenze(getWareMitPositionen(pDrehtellerNr, mDrehtellerPosition).getPreis());
-	  return wertEingewurfeneBetrag >= wertWare;
+	  return mKasse.istAusreichendGuthabendVorhanden(getWareMitPositionen(pDrehtellerNr, mDrehtellerPosition).getPreis());
   }
   
   /**
@@ -251,14 +249,7 @@ public class Automat {
    * @return Anzahl verkaufter Waren.
    */
   public int gibVerkaufsStatistik(String pName, Date pDatum) {
-	ArrayList<Ware> warenStatistik = mKasse.getStatistik().gibStatistikHistorie();
-	int totWaren = 0;
-	for (Ware ware: warenStatistik) {
-	    if (ware.getWarenname().equals(pName) && ware.getVerkausdatum().after(pDatum)) {
-	    	totWaren++;
-	    }
-	}
-    return totWaren;
+    return mKasse.getStatistik().berechneAnzahlWaren(pName, pDatum);
   }
   
 }

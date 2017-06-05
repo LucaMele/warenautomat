@@ -206,8 +206,8 @@ public class Kasse {
    */
   public double gibBetragVerkaufteWaren() {
 	int ganzWert = 0;
-	ArrayList<Ware> statistikHistorie = mStatistik.gibStatistikHistorie();
-	for (Ware ware: statistikHistorie) {
+	ArrayList<Ware> warenbezug = mStatistik.gibWarenbezug();
+	for (Ware ware: warenbezug) {
 		ganzWert += getIntValueMuenze(ware.getPreis());
 	}
     return getDoubleValueMuenze(ganzWert);
@@ -276,5 +276,16 @@ public class Kasse {
    */
   public boolean istAusreichendWechselgeldVorhanden(double betrag) {
 	   return entferneGeldMuenzseule(betrag, DRY_RUN, OEFFNEN_MODUS);
+  }
+  
+  /**
+   *
+   * @param preis
+   * @return
+   */
+  public boolean istAusreichendGuthabendVorhanden (double preis){
+	  int wertEingewurfeneBetrag = getIntValueMuenze(mEinwurfBetrag);
+	  int wertWare = getIntValueMuenze(preis);
+	  return wertEingewurfeneBetrag >= wertWare;
   }
 }
