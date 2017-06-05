@@ -1,6 +1,8 @@
 package warenautomat;
 
 
+import java.util.ArrayList;
+
 import warenautomat.SystemSoftware;
 
 /**
@@ -25,6 +27,7 @@ public class Kasse {
   final static double VALUE_MUENZEN[] =  { 0.10, 0.20, 0.50, 1.00, 2.00 };
 
   private double mEinwurfBetrag;
+  private Statistik mStatistik;
 
   /**
    * Standard-Konstruktor. <br>
@@ -37,6 +40,7 @@ public class Kasse {
 		mMuenzseule[i] = new Muenzseule(CAPACITY_MUENZEULE, VALUE_MUENZEN[i], 0);
 	}
 	mEinwurfBetrag = 0.0;
+	mStatistik = new Statistik();
   }
 
   /**
@@ -180,9 +184,21 @@ public class Kasse {
    * @return Gesamtbetrag der bisher verkauften Waren.
    */
   public double gibBetragVerkaufteWaren() {
+	int ganzWert = 0;
+	ArrayList<Ware> statistikHistorie = mStatistik.gibStatistikHistorie();
+	for (Ware ware: statistikHistorie) {
+		ganzWert += getIntValueMuenze(ware.getPreis());
+	}
+    return getDoubleValueMuenze(ganzWert);
     
-    return 0.0; // TODO
-    
+  }
+  
+  /**
+   *
+   * @return
+   */
+  public Statistik getStatistik() {
+	  return mStatistik;
   }
   
   /**
@@ -249,8 +265,6 @@ public class Kasse {
    * @return
    */
   public boolean istAusreichendWechselgeldVorhanden(double betrag) {
-		return entferneGeldMuenzseule(betrag, DRY_RUN, OEFFNEN_MODUS);
-
+	   return entferneGeldMuenzseule(betrag, DRY_RUN, OEFFNEN_MODUS);
   }
-
 }

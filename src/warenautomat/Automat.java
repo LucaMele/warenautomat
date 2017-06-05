@@ -160,7 +160,9 @@ public class Automat {
     }
     
     mKasse.entferneGeldMuenzseule(getWareMitPositionen(pDrehtellerNr-1, mDrehtellerPosition).getPreis(), !Kasse.DRY_RUN, Kasse.OEFFNEN_MODUS);
-    mDrehteller[pDrehtellerNr-1].getFach(mDrehtellerPosition).setWare(null);
+    Fach fach = mDrehteller[pDrehtellerNr-1].getFach(mDrehtellerPosition);
+    mKasse.getStatistik().setWare(fach.getWare());
+    fach.setWare(null);
     
     aktualisiereDrehteller(pDrehtellerNr-1);
     

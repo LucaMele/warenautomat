@@ -33,15 +33,17 @@ public class WarenAutomatTest {
       System.out.println("*** Drehteller Nr.1 mit einem \"Eins\" füllen:");
       automatOne.fuelleFach(1, "Eins", 1.00, df.parse("01.01.2041"));    
       System.out.println("*** Drehteller Nr.2 mit einem \"Zwei\" füllen:");
-      automatOne.fuelleFach(2, "Zwei", 2.00, df.parse("01.01.2002"));
+      automatOne.fuelleFach(2, "Zwei", 2.00, df.parse("01.01.2041"));
       System.out.println("*** Drehteller Nr.4 mit einem \"Zwei\" füllen:");
       automatOne.fuelleFach(4, "Zwei", 2.00, df.parse("01.01.2002"));
       System.out.println("*** kasse.einnehmen(1.00):");
       Kasse kasseOne = automatOne.gibKasse();
       kasseOne.einnehmen(1.00);
       automatOne.oeffnen(1);
-      System.out.println("Automat total warenwert: (EXPECT 4.0): " + automatOne.gibTotalenWarenWert());
-      
+      kasseOne.einnehmen(2.00);
+      automatOne.oeffnen(2);
+      System.out.println("Automat total warenwert:" + automatOne.gibTotalenWarenWert());
+      System.out.println("Gesamtwert verkaufte ware: " + kasseOne.gibBetragVerkaufteWaren());
       Automat automat = new Automat();
       
       
