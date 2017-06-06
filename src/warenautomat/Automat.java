@@ -73,12 +73,14 @@ public class Automat {
    * wenn ein Fach offen ist.
    */
   public void drehen() {
+	  //SystemSoftware.output(false);
 	  SystemSoftware.dreheWarenInGui();
 	  mDrehtellerPosition++;
 	  if (mDrehtellerPosition >= 16) {
 		  mDrehtellerPosition = 0;
 	  }
 	  aktualieserePreise();
+	  //SystemSoftware.output(true);
   }
   
   /**
@@ -95,7 +97,6 @@ public class Automat {
    * @param drehtellerNr
    */
   private void aktualisiereDrehteller(int drehtellerNr) {
-	  SystemSoftware.output(false);
 	  Ware ware = getWareMitPositionen(drehtellerNr, mDrehtellerPosition);
 	  if (ware != null) {
 		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, ware.getWarenname(), ware.getAblaufsdatum());
@@ -106,7 +107,6 @@ public class Automat {
 		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, 0.0);
 		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, 0);
 	  }
-	  SystemSoftware.output(true);
   }
   
   /**
@@ -231,8 +231,11 @@ public class Automat {
     for (int i = 0; i < mDrehteller.length; i++) {
     	for (int j = 0; j < MAX_POSIZIONEN; j++) {
     		Ware ware = getWareMitPositionen(i, j);
-    		if (ware != null) {
+    		if (ware != null && SystemSoftware.gibAktuellesDatum().before(ware.getAblaufsdatum())) {
     			totWaren += mKasse.getIntValueMuenze(ware.getPreis());
+    		// wenn ware abgelaufen ist, wert ist 20%
+    		} else if(ware != null && !SystemSoftware.gibAktuellesDatum().before(ware.getAblaufsdatum())) {
+    			totWaren += mKasse.getIntValueMuenze(ware.getPreis()) / 100 * 20;
     		}
     	}
     }

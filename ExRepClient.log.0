@@ -48,3 +48,31 @@ DynamicUploadWarenau:INFO   :execute() from DynamicUpload class stopped
 CliPdUI             :INFO   :execute() of dynamic upload class returned successfully
 CliPdUI             :INFO   :lastAnswer.size(): 1
 CliPdUI             :INFO   :result: >210 Process UID "warenautomat.checkin" successfully executed in 773ms<
+ComPdCommandLinePars:INFO   :Logging to SysOut (console) enabled by command line argument
+ComPdCommandLinePars:INFO   :Logging to logfile enabled by command line argument
+ComPdCommandLinePars:INFO   :LogLevel set to FINER by command line argument
+CliPdUI             :INFO   :Timestamp: 16:58:55.13 - 06.06.2017
+CliPdUI             :INFO   :Starting ExRep-Client v3.0.0
+CliDmClientConfig   :INFO   :Loading client config from XML
+CliDmClientConfig   :FINER  :Loaded network data
+CliDmClientConfig   :FINER  :Loaded user data
+CliDmClientConfig   :FINER  :Loaded ranking data
+CliDmClientConfig   :FINER  :Loaded log module "client" with level "OFF"
+CliDmClientConfig   :FINER  :Loaded logging data
+CliDmClientConfig   :INFO   :XML client config file successfully saved
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :The connect attempt timed out
+CliNtServerConnectio:SEVERE :Sorry, no port with a listening ExRep-Server found, giving up!
+CliPdUI             :WARNING:Could not login, to test connection and download exercises
