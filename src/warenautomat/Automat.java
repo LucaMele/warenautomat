@@ -89,19 +89,19 @@ public class Automat {
    * @param drehtellerNr
    * @param mussBestellen
    */
-  private void aktualisiereDrehteller(int drehtellerNr, boolean mussBestellen) {
-	  Ware ware = getWareMitPositionen(drehtellerNr, mDrehtellerPosition);
+  private void aktualisiereDrehteller(int pDrehtellerNr, boolean pMussBestellen) {
+	  Ware ware = getWareMitPositionen(pDrehtellerNr, mDrehtellerPosition);
 	  if (ware != null) {
-		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, ware.getWarenname(), ware.getAblaufsdatum());
-		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, ware.getPreis());
-		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, SystemSoftware.gibAktuellesDatum().before(ware.getAblaufsdatum()) ? 1 : 2);
+		  SystemSoftware.zeigeWareInGui(pDrehtellerNr + 1, ware.getWarenname(), ware.getAblaufsdatum());
+		  SystemSoftware.zeigeWarenPreisAn(pDrehtellerNr + 1, ware.getPreis());
+		  SystemSoftware.zeigeVerfallsDatum(pDrehtellerNr + 1, SystemSoftware.gibAktuellesDatum().before(ware.getAblaufsdatum()) ? 1 : 2);
 	  } else {
-		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, "", SystemSoftware.gibAktuellesDatum());
-		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, 0.0);
-		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, 0);
+		  SystemSoftware.zeigeWareInGui(pDrehtellerNr + 1, "", SystemSoftware.gibAktuellesDatum());
+		  SystemSoftware.zeigeWarenPreisAn(pDrehtellerNr + 1, 0.0);
+		  SystemSoftware.zeigeVerfallsDatum(pDrehtellerNr + 1, 0);
 	  }
-	  if (mussBestellen) {
-		  ueberpruefeWareUndBestelle(drehtellerNr, mDrehtellerPosition);
+	  if (pMussBestellen) {
+		  ueberpruefeWareUndBestelle(pDrehtellerNr, mDrehtellerPosition);
 	  }
   }
   

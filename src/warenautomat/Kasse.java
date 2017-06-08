@@ -158,8 +158,8 @@ public class Kasse {
    * @param muenze
    * @return
    */
-   public int getIntValueMuenze(double muenze) {
-	  return (int) Math.round(muenze * 100);
+   public int getIntValueMuenze(double pMuenze) {
+	  return (int) Math.round(pMuenze * 100);
   }
   
   /**
@@ -175,8 +175,8 @@ public class Kasse {
    * @param muenze
    * @return
    */
-  public double getDoubleValueMuenze(int muenze) {
-	  return muenze / 100.0;
+  public double getDoubleValueMuenze(int pMuenze) {
+	  return pMuenze / 100.0;
   }
 
   /**
@@ -227,14 +227,14 @@ public class Kasse {
    * @param pDryRun
    * @return
    */
-  public boolean entferneGeldMuenzseule (double betrag, boolean pDryRun, int modus) {
-	int preisInt = getIntValueMuenze(betrag);
+  public boolean entferneGeldMuenzseule (double pBetrag, boolean pDryRun, int pModus) {
+	int preisInt = getIntValueMuenze(pBetrag);
 	int restGeldNachBezahlung = getIntValueMuenze(mEinwurfBetrag) - preisInt;
 	if (!pDryRun) {
 		mEinwurfBetrag = getDoubleValueMuenze(restGeldNachBezahlung);
 		SystemSoftware.zeigeBetragAn(mEinwurfBetrag);
 	}
-	restGeldNachBezahlung = entferneMuenzenVonIntBetrag(restGeldNachBezahlung, modus);
+	restGeldNachBezahlung = entferneMuenzenVonIntBetrag(restGeldNachBezahlung, pModus);
 	return restGeldNachBezahlung == 0;
   }
   
@@ -243,30 +243,30 @@ public class Kasse {
    * @param preisInt
    * @return
    */
-  private int entferneMuenzenVonIntBetrag(int betragInt, int modus) {
+  private int entferneMuenzenVonIntBetrag(int pBetragInt, int pModus) {
 	  for (int i = mMuenzseule.length - 1; i >= 0; i--) {
-		  int maxMuenzeDiePlatzHaben = (int) (betragInt / getIntValueMuenze(mMuenzseule[i].gibMuenzart()));
+		  int maxMuenzeDiePlatzHaben = (int) (pBetragInt / getIntValueMuenze(mMuenzseule[i].gibMuenzart()));
 		  int anzahlMuenzen = mMuenzseule[i].gibAnzahlMuenzen();
 		  if (maxMuenzeDiePlatzHaben > anzahlMuenzen) {
 			  maxMuenzeDiePlatzHaben = anzahlMuenzen;
 		  }
 		  if (maxMuenzeDiePlatzHaben > 0 && maxMuenzeDiePlatzHaben > 0) {
-			  int tmpPreis = betragInt - (maxMuenzeDiePlatzHaben * getIntValueMuenze(mMuenzseule[i].gibMuenzart()));
+			  int tmpPreis = pBetragInt - (maxMuenzeDiePlatzHaben * getIntValueMuenze(mMuenzseule[i].gibMuenzart()));
 			  if (tmpPreis == 0) {
-				  betragInt = tmpPreis;
-				  if (modus == RESTGELD_MODUS) {
+				  pBetragInt = tmpPreis;
+				  if (pModus == RESTGELD_MODUS) {
 					  mMuenzseule[i].entferneMuenzen(maxMuenzeDiePlatzHaben);
 				  }
 				  break;
 			  } else if (tmpPreis > 0) {
-				  betragInt = tmpPreis;
-				  if (modus == RESTGELD_MODUS) {
+				  pBetragInt = tmpPreis;
+				  if (pModus == RESTGELD_MODUS) {
 					  mMuenzseule[i].entferneMuenzen(maxMuenzeDiePlatzHaben);
 				  }
 			  }
 		  }
 		}
-	    return betragInt;
+	    return pBetragInt;
   }
 
   /**
@@ -274,8 +274,8 @@ public class Kasse {
    * @param betrag
    * @return
    */
-  public boolean istAusreichendWechselgeldVorhanden(double betrag) {
-	   return entferneGeldMuenzseule(betrag, DRY_RUN, OEFFNEN_MODUS);
+  public boolean istAusreichendWechselgeldVorhanden(double pBetrag) {
+	   return entferneGeldMuenzseule(pBetrag, DRY_RUN, OEFFNEN_MODUS);
   }
   
   /**
@@ -283,9 +283,9 @@ public class Kasse {
    * @param preis
    * @return
    */
-  public boolean istAusreichendGuthabendVorhanden (double preis){
+  public boolean istAusreichendGuthabendVorhanden (double pPreis){
 	  int wertEingewurfeneBetrag = getIntValueMuenze(mEinwurfBetrag);
-	  int wertWare = getIntValueMuenze(preis);
+	  int wertWare = getIntValueMuenze(pPreis);
 	  return wertEingewurfeneBetrag >= wertWare;
   }
 }
