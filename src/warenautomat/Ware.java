@@ -6,6 +6,7 @@ public class Ware {
 	private double mPreis;
 	private Date mAblaufdatum;
 	private Date mVerkaufsdatum;
+	private KonfigurationBestellung mKonfigurationBestellung;
 	
 	/**
 	 * @constructor
@@ -17,6 +18,7 @@ public class Ware {
 		mPreis = pPreis;
 		mAblaufdatum = pAblaufdatum;
 		mVerkaufsdatum = null;
+		mKonfigurationBestellung = null;
 	}
 	
 	/**
@@ -57,5 +59,22 @@ public class Ware {
 	 */
 	public Date getAblaufsdatum() {
 		return mAblaufdatum;
+	}
+	
+	/**
+	 *
+	 * @param pGrenze
+	 * @param pBestellAnzahl
+	 */
+	public void aktualisiereKonfigurationBestellung(int pGrenze, int pBestellAnzahl) {
+		mKonfigurationBestellung = new KonfigurationBestellung(pGrenze, pBestellAnzahl);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public KonfigurationBestellung getKonfigurationBestellung() {
+		return mKonfigurationBestellung;
 	}
 }

@@ -1,6 +1,5 @@
 package warenautomat;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -51,7 +50,7 @@ public class Automat {
   public void fuelleFach(int pDrehtellerNr, String pWarenName, double pPreis, Date pVerfallsDatum) {
 	 if (pDrehtellerNr <= 7) {
 		 mDrehteller[pDrehtellerNr- 1].fuelleFachAuf(mDrehtellerPosition, pWarenName, pPreis, pVerfallsDatum);
-		 aktualisiereDrehteller(pDrehtellerNr - 1);
+		 aktualisiereDrehteller(pDrehtellerNr - 1, false);
 	 }
   }
 
@@ -79,24 +78,18 @@ public class Automat {
 	  if (mDrehtellerPosition >= 16) {
 		  mDrehtellerPosition = 0;
 	  }
-	  aktualieserePreise();
+	  for (int i = 0; i < NR_DREHTELLER; i++) {
+		  aktualisiereDrehteller(i, true);
+	  }
 	  //SystemSoftware.output(true);
   }
   
   /**
    *
-   */
-  private void aktualieserePreise() {
-	  for (int i = 0; i < NR_DREHTELLER; i++) {
-		  aktualisiereDrehteller(i);
-	  }
-  }
-  
-  /**
-   * 
    * @param drehtellerNr
+   * @param mussBestellen
    */
-  private void aktualisiereDrehteller(int drehtellerNr) {
+  private void aktualisiereDrehteller(int drehtellerNr, boolean mussBestellen) {
 	  Ware ware = getWareMitPositionen(drehtellerNr, mDrehtellerPosition);
 	  if (ware != null) {
 		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, ware.getWarenname(), ware.getAblaufsdatum());
@@ -106,6 +99,9 @@ public class Automat {
 		  SystemSoftware.zeigeWareInGui(drehtellerNr + 1, "", SystemSoftware.gibAktuellesDatum());
 		  SystemSoftware.zeigeWarenPreisAn(drehtellerNr + 1, 0.0);
 		  SystemSoftware.zeigeVerfallsDatum(drehtellerNr + 1, 0);
+	  }
+	  if (mussBestellen) {
+		  ueberpruefeWareUndBestelle(drehtellerNr, mDrehtellerPosition);
 	  }
   }
   
@@ -117,6 +113,42 @@ public class Automat {
    */
   private Ware getWareMitPositionen(int pDrehtellerNr, int pAktuellePosition) {
 	  return mDrehteller[pDrehtellerNr].getFach(pAktuellePosition).getWare();
+  }
+  
+  /**
+   *
+   * @param pDrehtellerNr
+   * @param pAktuellePosition
+   * @return
+   */
+  private boolean ueberpruefeWareUndBestelle(int pDrehtellerNr, int pAktuellePosition) {
+	  Ware ware = getWareMitPositionen(pDrehtellerNr, pAktuellePosition);
+	  if (ware != null && 
+		  ware.getKonfigurationBestellung() != null &&
+		  anzahlNichtAbgelaufeneWare(ware.getWarenname()) <= ware.getKonfigurationBestellung().getGrenze()
+		 ) {
+		  SystemSoftware.bestellen(ware.getWarenname(), ware.getKonfigurationBestellung().getBestellAnzahl());
+		  return true;
+	  }
+	  return false;
+  }
+  
+  /**
+   *
+   * @param pWarenName
+   * @return
+   */
+  private int anzahlNichtAbgelaufeneWare(String pWarenName) {
+	  int totWaren = 0;
+	  for (int i = 0; i < mDrehteller.length; i++) {
+    	for (int j = 0; j < MAX_POSIZIONEN; j++) {
+    		Ware ware = getWareMitPositionen(i, j);
+    		if (ware != null && ware.getWarenname().equals(pWarenName) && SystemSoftware.gibAktuellesDatum().before(ware.getAblaufsdatum())) {
+    			totWaren++;
+    		}
+    	}
+	  }
+	  return totWaren;
   }
 
   /**
@@ -169,7 +201,7 @@ public class Automat {
     mKasse.getStatistik().erfasseWarenbezug(ware);
     fach.aktualiesiereWare(null);
     
-    aktualisiereDrehteller(pDrehtellerNr-1);
+    aktualisiereDrehteller(pDrehtellerNr-1, true);
     
     SystemSoftware.entriegeln(pDrehtellerNr);
     return true;
@@ -255,4 +287,28 @@ public class Automat {
     return mKasse.getStatistik().berechneAnzahlWaren(pName, pDatum);
   }
   
+
+	/**
+	 * Konfiguration einer automatischen Bestellung. <br>
+	 * Der Automat setzt automatisch Bestellungen ab mittels
+	 * <code> SystemSoftware.bestellen() </code> wenn eine Ware ausgeht.
+	 * 
+	 * @param pWarenName Warenname derjenigen Ware, für welche eine automatische
+	 *          Bestellung konfiguriert wird.
+	 * @param pGrenze Grenze bei welcher Anzahl von verbleibenden, nicht
+	 *          abgelaufener Waren im Automat eine Bestellung abgesetzt werden
+	 *          soll (Bestellung wenn Waren-Anzahl nicht abgelaufener Waren <=
+	 *          pGrenze).
+	 * @param pBestellAnzahl Wieviele neue Waren jeweils bestellt werden sollen.
+	 */
+	public void konfiguriereBestellung(String pWarenName, int pGrenze, int pBestellAnzahl) {
+		for (int i = 0; i < mDrehteller.length; i++) {
+	    	for (int j = 0; j < MAX_POSIZIONEN; j++) {
+	    		Ware ware = getWareMitPositionen(i, j);
+	    		if (ware != null && pWarenName.equals(ware.getWarenname())) {
+	    			ware.aktualisiereKonfigurationBestellung(pGrenze, pBestellAnzahl);
+	    		} 
+	    	}
+	    }
+	 }
 }
