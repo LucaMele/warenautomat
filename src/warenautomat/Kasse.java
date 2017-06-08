@@ -17,8 +17,7 @@ import warenautomat.SystemSoftware;
 public class Kasse {
 	
   private Muenzseule[] mMuenzseule;
-  
-  final static int CAPACITY_MUENZEULE = 100;
+
   final static boolean DRY_RUN = true;
   final static int OEFFNEN_MODUS = 1;
   final static int RESTGELD_MODUS = 2;
@@ -37,7 +36,7 @@ public class Kasse {
 	int totMuenezen = VALUE_MUENZEN.length;
 	mMuenzseule = new Muenzseule[totMuenezen];
 	for (int i = 0; i < totMuenezen; i++) {
-		mMuenzseule[i] = new Muenzseule(CAPACITY_MUENZEULE, VALUE_MUENZEN[i], 0);
+		mMuenzseule[i] = new Muenzseule(VALUE_MUENZEN[i], 0);
 	}
 	mEinwurfBetrag = 0.0;
 	mStatistik = new Statistik();

@@ -3,8 +3,6 @@ package warenautomat;
 
 import java.util.Date;
 
-import warenautomat.SystemSoftware;
-
 
 public class Drehteller {
 	private Fach[] mFach;

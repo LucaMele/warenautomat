@@ -2,7 +2,7 @@ package warenautomat;
 
 public class Muenzseule {
 
-	private int mKapazitaet;
+	final static int CAPACITY_MUENZEULE = 100;
 	private double mMuenzart;
 	private int mAnzahlMuenzen;
 	private int mTemporaereAnzahlMuenzen;
@@ -15,8 +15,7 @@ public class Muenzseule {
 	 * @param pMuenzart
 	 * @param pAnzahlMuenzen
 	 */
-	public Muenzseule(int pKapazitaet , double pMuenzart, int pAnzahlMuenzen) {
-		mKapazitaet = pKapazitaet;
+	public Muenzseule(double pMuenzart, int pAnzahlMuenzen) {
 		mMuenzart = pMuenzart;
 		mAnzahlMuenzen = pAnzahlMuenzen;
 		mTemporaereAnzahlMuenzen = pAnzahlMuenzen;
@@ -76,16 +75,16 @@ public class Muenzseule {
 			return false;
 		}
 		if (mIstAmVerwalten) {
-			if (mTemporaereAnzahlMuenzen + pAnzahl <= Kasse.CAPACITY_MUENZEULE) {
+			if (mTemporaereAnzahlMuenzen + pAnzahl <= Muenzseule.CAPACITY_MUENZEULE) {
 				mTemporaereAnzahlMuenzen = mTemporaereAnzahlMuenzen + pAnzahl;
 			} else {
-				mTemporaereAnzahlMuenzen = Kasse.CAPACITY_MUENZEULE;
+				mTemporaereAnzahlMuenzen = Muenzseule.CAPACITY_MUENZEULE;
 			}
 		} else {
-			if (mAnzahlMuenzen + pAnzahl <= Kasse.CAPACITY_MUENZEULE) {
+			if (mAnzahlMuenzen + pAnzahl <= Muenzseule.CAPACITY_MUENZEULE) {
 				mAnzahlMuenzen = mAnzahlMuenzen + pAnzahl;
 			} else {
-				mAnzahlMuenzen = Kasse.CAPACITY_MUENZEULE;
+				mAnzahlMuenzen = Muenzseule.CAPACITY_MUENZEULE;
 			}
 		}
 		return true;
