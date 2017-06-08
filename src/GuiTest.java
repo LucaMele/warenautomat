@@ -44,10 +44,16 @@ public class GuiTest {
 		String day = String.format("%02d", i+1);
         automat.fuelleFach(1, "Mars"+(i+1), i+1, df.parse(day+".01.2100"));
 	    automat.fuelleFach(4, "Twix"+(i+1), Math.round(i+1 / 2.0), df.parse(day+".01.2100"));
+		automat.fuelleFach(2, "MarsGenerischAbgelauf", i+1, df.parse(day+".01.2002"));
+		automat.fuelleFach(6, "MarsGenerischNichtAbge", i+1, df.parse(day+".01.2032"));
 	}
 	  automat.drehen();
     }
     
+    automat.konfiguriereBestellung("Mars3", 1, 2);
+    automat.konfiguriereBestellung("Mars4", 1, 2);
+    automat.konfiguriereBestellung("MarsGenerischAbgelauf", 1, 2);
+    automat.konfiguriereBestellung("MarsGenerischNichtAbge", 1, 2);
   }
 
 }
